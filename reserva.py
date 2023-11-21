@@ -1,19 +1,18 @@
 
+
 import tkinter as tk
 from tkinter import ttk
 from tkcalendar import Calendar
 import mysql.connector
-from datetime import datetime
 
 conexion = mysql.connector.connect(
     host="localhost",
     user="root",
     password="",
-    database="reserva de hoteles"
+    database="reserva de hoteles"  
 )
 cursor = conexion.cursor()
 reserva_confirmada = False
-
 # Funciones
 def verificar_disponibilidad():
     global reserva_confirmada
@@ -39,12 +38,8 @@ def hacer_reserva():
     verificar_disponibilidad()
 
     if reserva_confirmada:
-        fecha_inicio_str = cal_inicio.get_date()
-        fecha_fin_str = cal_fin.get_date()
-
-        fecha_inicio = datetime.strptime(fecha_inicio_str, '%m/%d/%y').strftime('%Y-%m-%d')
-        fecha_fin = datetime.strptime(fecha_fin_str, '%m/%d/%y').strftime('%Y-%m-%d')
-        
+        fecha_inicio = cal_inicio.get_date()
+        fecha_fin = cal_fin.get_date()
         tipo_servicio = entrada_tipo_servicio.get()
 
         sql_insert = "INSERT INTO reservas (fecha_inicio, fecha_fin, tipo_servicio) VALUES (%s, %s, %s)"
@@ -56,12 +51,12 @@ def hacer_reserva():
     else:
         print("No se puede realizar la reserva debido a la falta de disponibilidad.")
 
-
 def cancelar_servicio():
-    fecha_inicio = cal_inicio.get_date().strftime('%Y-%m-%d')  # Formatear la fecha
-    fecha_fin = cal_fin.get_date().strftime('%Y-%m-%d')  # Formatear la fecha
+    fecha_inicio = cal_inicio.get_date()
+    fecha_fin = cal_fin.get_date()
     tipo_servicio = entrada_tipo_servicio.get()
 
+    # Eliminar la reserva con la fecha de inicio, fecha de fin y tipo de servicio correspondientes
     sql_delete = "DELETE FROM reservas WHERE fecha_inicio = %s AND fecha_fin = %s AND tipo_servicio = %s"
     val_delete = (fecha_inicio, fecha_fin, tipo_servicio)
 
